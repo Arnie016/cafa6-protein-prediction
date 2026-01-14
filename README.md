@@ -1,70 +1,70 @@
 # CAFA-6 Protein Function Prediction 🧬
 
-> Multi-modal ensemble approach for Gene Ontology term prediction
+> Multi-modal ensemble for Gene Ontology term prediction
 
-## 🏆 Competition
-[Kaggle CAFA-6](https://www.kaggle.com/competitions/cafa-5-protein-function-prediction) - Critical Assessment of Functional Annotation
+## 📊 Score Progression
 
-## 📊 Results
-| Method | F-max Score |
-|--------|-------------|
-| DIAMOND Baseline | 0.219 |
-| Text Mining (PubMedBERT) | 0.179 |
-| Ensemble v1 | 0.233 |
-| Final Ensemble | TBD |
+| Stage | Method | F-max | Notes |
+|-------|--------|-------|-------|
+| 1 | LightGBM Baseline | 0.114 | AAC features only |
+| 1 | DIAMOND Homology | **0.219** | Sequence alignment |
+| 2 | Ensemble v1 | **0.233** | Combined baseline |
+| 3 | PubMedBERT Text Mining | 0.179 | UniProt descriptions |
+| 4 | ESM2-650M + MLP | TBD | Modal A10G |
+| 4 | ESM2-3B + MLP | TBD | Modal A100 |
+| 4 | ProtT5-XL + MLP | TBD | Modal A100 |
+| 5 | Final Ensemble | **TBD** | All models combined |
 
-## 🧠 Models Used
-- **ESM2-650M/3B** - Protein language model embeddings
-- **ProtT5-XL** - T5-based protein encoder
-- **PubMedBERT** - Text mining from UniProt descriptions
-- **ProstT5** - 3Di structural sequence generation
+## 📁 Folder Structure
+
+```
+├── 01_baseline/           # Starting point (Score: 0.219)
+│   └── diamond_baseline.py
+│
+├── 02_text_mining/        # PubMedBERT (Score: 0.179)
+│   └── modal_pubmedbert.py
+│
+├── 03_structure_models/   # PLM embeddings (Score: TBD)
+│   ├── modal_esm2_650M.py
+│   ├── modal_esm2_3B.py
+│   └── modal_prott5.py
+│
+├── 04_advanced/           # 3Di structural search
+│   ├── generate_3di.py
+│   ├── 3di_matrix.mat
+│   └── transfer_3di_go.py
+│
+├── 05_ensemble/           # Final combination
+│   ├── ensemble_predictions.py
+│   ├── tune_ensemble.py
+│   ├── enforce_hierarchy.py
+│   └── correct_with_graph.py
+│
+└── utils/                 # Helper scripts
+    ├── fetch_uniprot_descriptions.py
+    ├── fetch_string_ppi.py
+    └── filter_by_taxonomy.py
+```
 
 ## 🚀 Quick Start
 
-### Modal Cloud (Recommended)
 ```bash
-# Install Modal
-pip install modal
-modal setup
+# 1. Run baseline
+python 01_baseline/diamond_baseline.py
 
-# Run structure model
-python3 -m modal run --detach modal_structure.py
+# 2. Run Modal models (cloud GPU)
+modal run 03_structure_models/modal_esm2_650M.py
 
-# Run text mining
-python3 -m modal run --detach modal_text_mining.py
+# 3. Ensemble
+python 05_ensemble/ensemble_predictions.py --inputs *.tsv
 ```
 
-### Ensemble
-```bash
-python ensemble_predictions.py \
-    --inputs sub1.tsv sub2.tsv \
-    --weights 0.5 0.5 \
-    --output final.tsv
-```
+## 📚 Key Learnings
 
-## 📁 Key Files
-
-| File | Description |
-|------|-------------|
-| `modal_structure.py` | ESM2-650M on Modal A10G |
-| `modal_structure_3B.py` | ESM2-3B on Modal A100 |
-| `modal_prott5_fixed.py` | ProtT5-XL on Modal A100 |
-| `modal_text_mining.py` | PubMedBERT text mining |
-| `ensemble_predictions.py` | Weighted ensemble |
-| `enforce_hierarchy.py` | GO DAG consistency |
-| `LEARNINGS.md` | Pitfalls & lessons learned |
-
-## 📚 Documentation
-- [LEARNINGS.md](LEARNINGS.md) - Complete learnings & pitfalls
-- [IMPLEMENTATION_GUIDE.md](IMPLEMENTATION_GUIDE.md) - Technical details
-
-## ⚠️ Requirements
-- Python 3.9+
-- PyTorch, Transformers, Biopython
-- Modal account (for cloud GPU)
+See [LEARNINGS.md](LEARNINGS.md) for:
+- ⚠️ Pitfalls (Modal crashes, budget limits)
+- 💡 Tips (--detach flag, A100 for 3B models)
+- 🔧 Technical decisions
 
 ## 📖 License
 MIT
-
----
-*CAFA-6 Competition - January 2026*
