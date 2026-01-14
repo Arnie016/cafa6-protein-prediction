@@ -23,7 +23,11 @@ image = (
 )
 
 # REQUESTING A100 GPU (40GB VRAM minimum for 3B parameter model)
-@app.function(image=image, gpu="A100", timeout=86400)
+@app.function(
+    image=image,
+    gpu="A100",
+    timeout=60 * 60 * 24,  # 24 hours (was 12)400)
+)
 def train_structure_model_3B():
     import numpy as np
     import pandas as pd

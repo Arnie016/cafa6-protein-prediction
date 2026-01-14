@@ -22,7 +22,11 @@ image = (
     .add_local_file("Train/go-basic.obo", "/root/data/Train/go-basic.obo")
 )
 
-@app.function(image=image, gpu="A10G", timeout=86400)
+@app.function(
+    image=image,
+    gpu="A10G",
+    timeout=60 * 60 * 24,  # 24 hours (was 12)400)
+)
 def train_structure_model():
     import numpy as np
     import pandas as pd
