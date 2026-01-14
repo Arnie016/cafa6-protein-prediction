@@ -1,0 +1,36 @@
+# Large data files
+*.tsv
+*.dmnd
+*.tar.gz
+Train/
+Test/
+embeddings/
+features/
+features_v2/
+models/
+predictions/
+local_model/
+internal_model/
+data/
+kaggle output'/
+logs/
+
+# Checkpoints
+*.pt
+*.pth
+*.pkl
+*.h5
+
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+*.log
+*_pid.txt
+
+# IDE
+.vscode/
+.idea/
